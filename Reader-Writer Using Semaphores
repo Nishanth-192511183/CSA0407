@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<pthread.h>
+#include<semaphore.h>
+int r=0,x=0;
+sem_t m,w;
+void *reader(void *a){
+sem_wait(&m);
+r++;
+if(r==1)
+sem_wait(&w);
+sem_post(&m);
+printf("Reader %ld reads %d\n",(long)a,x);
+sem_wait(&m);
+r--;
+if(r==0)
+sem_post(&w);
+sem_post(&m);}
+void *writer(void *a)
+{
+sem_wait(&w);
+x=x+1;
+printf("Writer writes %d\n",x);
+sem_post(&w);}
+int main()
+{
+pthread_t r1,r2,w1;
+sem_init(&m,0,1);
+sem_init(&w,0,1);
+pthread_create(&r1,0,reader,(void *)1);
+pthread_create(&r2,0,reader,(void *)2);
+pthread_create(&w1,0,writer,0);
+pthread_join(r1,0);
+pthread_join(r2,0);
+pthread_join(w1,0);
+return 0;
+}
