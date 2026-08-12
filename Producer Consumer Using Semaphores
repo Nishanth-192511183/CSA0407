@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<pthread.h>
+#include<semaphore.h>
+int a[5],in=0,out=0;
+sem_t e,f;
+pthread_mutex_t m;
+void *p(void *q)
+{
+int i;
+for(i=1;i<=5;i++)
+{
+sem_wait(&e);
+pthread_mutex_lock(&m);
+a[in]=i;
+printf("Produced %d\n",i);
+in=(in+1)%5;
+pthread_mutex_unlock(&m);
+sem_post(&f);
+}
+}
+
+void *c(void *q)
+{
+int i;
+for(i=1;i<=5;i++)
+{
+sem_wait(&f);
+pthread_mutex_lock(&m);
+printf("Consumed %d\n",a[out]);
+out=(out+1)%5;
+
+pthread_mutex_unlock(&m);
+sem_post(&e);
+}
+}
+
+int main()
+{
+pthread_t t1,t2;
+sem_init(&e,0,5);
+sem_init(&f,0,0);
+pthread_mutex_init(&m,0);
+pthread_create(&t1,0,p,0);
+pthread_create(&t2,0,c,0);
+pthread_join(t1,0);
+pthread_join(t2,0);
+return 0;
+}
