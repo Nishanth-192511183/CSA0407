@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+int main(){
+    int fd;
+    char a[100];
+    int n;
+    fd = open("file.txt", O_CREAT | O_RDWR, 0644);
+    if(fd == -1)
+    {
+        printf("File cannot be opened\n");
+        return 1;}
+    write(fd, "Hello UNIX", 10);
+    lseek(fd, 0, SEEK_SET);
+    n = read(fd, a, 10);
+    a[n] = '\0';
+    printf("File content: %s\n", a);
+    close(fd);
+    return 0;
+}
