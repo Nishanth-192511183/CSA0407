@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+int main()
+{
+    int fd, flags;
+    off_t pos;
+    struct stat s;
+    DIR *d;
+    struct dirent *entry;
+
+    fd = open("sample.txt", O_RDWR | O_CREAT, 0644);
+
+    if(fd == -1)
+    {
+        printf("File cannot be opened\n");
+        return 1;
+    }
+
+    flags = fcntl(fd, F_GETFL);
+    printf("File Descriptor: %d\n", fd);
+    printf("File Flags: %d\n", flags);
+
+    pos = lseek(fd, 5, SEEK_SET);
+    printf("File Pointer Position: %ld\n", (long)pos);
+
+    stat("sample.txt", &s);
+    printf("File Size: %ld bytes\n", (long)s.st_size);
+    printf("Inode Number: %ld\n", (long)s.st_ino);
+
+    d = opendir(".");
+
+    if(d == NULL)
+    {
+        printf("Directory cannot be opened\n");
+        close(fd);
+        return 1;
+    }
+
+    printf("\nDirectory Contents:\n");
+
+    while((entry = readdir(d)) != NULL)
+        printf("%s\n", entry->d_name);
+
+    closedir(d);
+    close(fd);
+
+    return 0;
+}
