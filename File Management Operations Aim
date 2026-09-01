@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+int main()
+{
+    FILE *fp;
+    char name[50], data[100];
+
+    printf("Enter file name: ");
+    scanf("%s", name);
+
+    fp = fopen(name, "w");
+
+    if(fp == NULL)
+    {
+        printf("File cannot be created\n");
+        return 1;
+    }
+
+    printf("Enter file content: ");
+    scanf(" %[^\n]", data);
+
+    fprintf(fp, "%s", data);
+    fclose(fp);
+
+    fp = fopen(name, "r");
+
+    if(fp == NULL)
+    {
+        printf("File cannot be opened\n");
+        return 1;
+    }
+
+    printf("\nFile Content:\n");
+    fgets(data, sizeof(data), fp);
+    printf("%s\n", data);
+
+    fclose(fp);
+
+    return 0;
+}
