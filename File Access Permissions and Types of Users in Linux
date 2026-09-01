@@ -1,0 +1,14 @@
+$ touch project.txt
+
+$ ls -l project.txt
+-rw-r--r-- 1 student student 0 Sep 1 20:45 project.txt
+
+$ chmod 740 project.txt
+
+$ ls -l project.txt
+-rwxr----- 1 student student 0 Sep 1 20:45 project.txt
+
+$ chmod 624 project.txt
+
+$ ls -l project.txt
+-rw--w-r-- 1 student student 0 Sep 1 20:45 project.txt
